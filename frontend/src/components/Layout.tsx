@@ -8,7 +8,9 @@ export function Layout() {
         <nav>
           <NavLink to="/" end>Dashboard</NavLink>
           <NavLink to="/factories">Fabrikalar</NavLink>
-          <NavLink to="/activity">Aktiviteler</NavLink>
+            <NavLink to="/activity">Aktiviteler</NavLink>
+            <NavLink to="/activity">test</NavLink>
+
         </nav>
       </aside>
       <main className="main">
