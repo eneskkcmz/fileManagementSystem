@@ -22,7 +22,7 @@ export function FactoryDetail() {
 
   return (
     <>
-      <div className="crumb"><Link to="/factories">Fabrikalar</Link> / {factory?.name ?? '...'}</div>
+      <div className="crumb"><Link to="/fabrikalar">Yönetim</Link> / {factory?.name ?? '...'}</div>
       <div className="page-head">
         <h1>{factory?.name ?? 'Fabrika'}</h1>
         <button className="primary" onClick={() => setOpen(true)}>+ Yeni Proje</button>

@@ -71,6 +71,69 @@ Her `[ ]` bir PR/commit buyuklugunde tutulmali. Bir modul bitince `typecheck` te
 
 ---
 
+## Jira-benzeri Genisleme (yeni kapsam)  `[ ]`
+
+Kararlar: **haftalik planlama = sabit takvim haftasi (ISO week, or. 2026-W35)** ·
+**kisi/assignee simdi gelir (auth YOK, sadece isim listesi + atama)**.
+Bagimlilik: YP1 → YP2 → (YP3, YP4, YP5) → YP6.
+
+**Onerilen gercek calisma sirasi** (senaryonun omurgasi generic Faz 2-9'dan once gelmeli):
+YP1 (kisi) → YP2 (alanlar) → YP3 (haftalik gorunum) → YP4 (Excel) → YP5 (aciklama) →
+Faz 2 (Checklist) → Faz 3 (Feedback — "hatali donus" verisi icin sart) → YP6 (chartlar) →
+Faz 5/6 (Document/Attachment — tasarim dosyalarinin gercek upload'u).
+
+Baglam: **Borcelik tek kayit (is veren birim)** — bkz. DEVELOPER.md bolum 0. Yani "hangi
+fabrika" ekseni pratikte sabit; haftalik gorunumun asil eksenleri **hafta + assignee +
+(opsiyonel proje/kategori)**.
+
+Acik tasarim notu: WorkItem su an zorunlu `projectId` tasir. Ama Borcelik'ten gelen
+haftalik Excel duz bir liste olabilir (projesiz). Karar: ya `projectId`'yi **opsiyonel**
+yap (is dogrudan musteri+hafta+assignee'ye baglanir), ya da "Genel/Haftalik Isler" gibi
+bir varsayilan proje kullan. Import'a baslamadan netlestir (model'i bozmadan).
+
+### YP1 — Kisi (Person) + Assignee  `[ ]`
+Baglam: Person = **bizim ekip (Uzman Sistem)** — bkz. DEVELOPER.md bolum 0.
+- [ ] `shared`: `Person` tipi (id, name, opsiyonel email/etiket) + input semasi
+- [ ] DB: `people` tablosu + soft-delete
+- [ ] Repository + Service + Controller + Route (`/api/people` CRUD)
+- [ ] Seed: **Mete, Ozan, Yasir, Enes**
+- [ ] `WorkItem`'a `assigneeId` (nullable, → Person) ekle + grid/detayda goster/ata
+- [ ] NOT: login/rol yok; sadece isim listesi. Auth V2'de gelince buraya baglanir.
+
+### YP2 — WorkItem alan genisletme  `[ ]`
+- [ ] `WorkItem`'a: `estimatedHours` (istenen saat), ops. `spentHours`,
+      `isoWeek` (or. "2026-W35"), `designFileName` (tasarim dosyasi adi — metin)
+- [ ] Kategori: mevcut `type` alanini kategori olarak kullan ya da ayri `category` ekle (karar ver)
+- [ ] Shared sema + mapper + grid kolonlari + form alanlari guncelle
+
+### YP3 — Haftalik Gorunum  `[ ]`
+- [ ] Filtre: `GET /api/work-items?isoWeek=2026-W35&assigneeId=..` (musteri sabit=Borcelik)
+- [ ] Frontend: "Bu Hafta" ekrani — hafta sec (+ ops. kisi/kategori filtresi) → is listesi
+      (baslik, detay, istenen saat, tasarim dosyasi var mi/adi, durum, assignee)
+- [ ] **Onceki haftalar:** hafta seciciyle gecmis haftalara bakma (isoWeek gruplama bedava gelir)
+
+### YP4 — Excel Import (haftalik is yukleme)  `[ ]`
+- [ ] Upload endpoint: fabrika + isoWeek + dosya (multipart)
+- [ ] Parse: satir → WorkItem (baslik, detay, tip/kategori, estimatedHours, designFileName, assignee-adi)
+- [ ] Validation (size/mime/ext/sanitize) + hatali satir raporu
+- [ ] Assignee adini Person'a eslestir (yoksa olustur ya da uyar)
+- [ ] Frontend: yukleme ekrani + onizleme + sonuc/ozet
+
+### YP5 — Comment / Aciklama Modu  `[ ]`
+- [ ] `shared`: `Comment` tipi (id, workItemId, body, opsiyonel authorPersonId, createdAt)
+- [ ] DB + Repository + Service (+ activity) + Route (`/api/work-items/:id/comments`)
+- [ ] Frontend: WorkItem detayinda yorum/aciklama akisi (gelistirme notlari)
+
+### YP6 — Analitik & Chart'li Dashboard  `[ ]`
+- [ ] Analitik endpoint'leri (gruplu aggregate):
+  - [ ] Kategoriye gore is dagilimi (hangi kisimdan cok is geliyor)
+  - [ ] Duruma gore dagilim + haftalik throughput (hafta basina tamamlanan)
+  - [ ] **Hatali donus orani:** tamamlanmis WorkItem'lara gelen bug/reopened feedback (kategori bazli)
+  - [ ] Istenen vs harcanan saat (estimatedHours vs spentHours), hafta bazli
+  - [ ] Overdue trend
+- [ ] Frontend: chart kutuphanesi (or. Recharts) + dashboard'a grafikler
+- [ ] NOT: "hatali donus" icin Feedback'te tip (bug) ve/veya `reopened` durumu gerekebilir — YP5/Feedback ile hizala
+
 ## Kalite / Teknik Borc  `[ ]`
 - [ ] Backend testleri (vitest) — en az service + repository seviyesinde
 - [ ] Versiyonlu migration runner (schema.ts buyuyunce)

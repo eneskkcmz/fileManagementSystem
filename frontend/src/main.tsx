@@ -8,6 +8,9 @@ import { Factories } from './pages/Factories';
 import { FactoryDetail } from './pages/FactoryDetail';
 import { ProjectDetail } from './pages/ProjectDetail';
 import { ActivityPage } from './pages/ActivityPage';
+import {
+  BuHaftaPage, IslerPage, KisilerPage, DokumanlarPage, AnalitikPage,
+} from './pages/Placeholders';
 import './styles.css';
 
 const queryClient = new QueryClient({
@@ -20,10 +23,16 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { index: true, element: <Dashboard /> },
-      { path: 'factories', element: <Factories /> },
+      { path: 'bu-hafta', element: <BuHaftaPage /> },
+      { path: 'isler', element: <IslerPage /> },
+      { path: 'kisiler', element: <KisilerPage /> },
+      { path: 'dokumanlar', element: <DokumanlarPage /> },
+      { path: 'analitik', element: <AnalitikPage /> },
+      { path: 'aktiviteler', element: <ActivityPage /> },
+      // Geçici Yönetim (tek-müşteri modeline geçilince sadeleşecek)
+      { path: 'fabrikalar', element: <Factories /> },
       { path: 'factories/:factoryId', element: <FactoryDetail /> },
       { path: 'projects/:projectId', element: <ProjectDetail /> },
-      { path: 'activity', element: <ActivityPage /> },
     ],
   },
 ]);

@@ -9,6 +9,34 @@ spec dokumanina bak; sirayla ne yapilacagi icin `TODO.md`'ye bak.
 
 ---
 
+## 0. Domain / Baglam (Uzman Sistem <-> Borcelik)
+
+Bu araci dogru modellemek icin gercek dunya iliskisi:
+
+- Bu urun **Uzman Sistem**'in (biz — gelistirici/danisman firma) **ic takip araci**dir.
+- **Borcelik** (musteri) bize surekli **is ve ister** verir. Bu isler/istekler sistemde
+  **WorkItem** (ve ileride Feedback / ChangeRequest) olarak takip edilir.
+- **Ekibimiz (assignee'ler):** Mete, Ozan, Yasir, Enes → **Person** entity'si. (Login/rol yok;
+  su an sadece isim listesi + ise atama.)
+- **Factory** entity'si bu asamada **isin kaynagini = musteri (Borcelik)** temsil eder ve
+  su an pratikte **tek kayit** (Borcelik = "is veren birim"). Fabrika-ici detaylar bu
+  uygulamada YOK — onlar baska bir uygulamada yonetiliyor. Yani Factory burada bir "cati"
+  degil, isin geldigi birim. Ileride cok-musteriye **ozellesebilir** (kavramsal olarak
+  Factory ≈ Client/Musteri). Kod tarafinda simdilik isim `Factory` kaliyor — erken yeniden
+  adlandirma yok.
+
+Zincir:
+
+```
+Borcelik (Factory / isin kaynagi)
+   → is / ister  (WorkItem)
+       → ekibimizden birine atanir (Person: Mete/Ozan/Yasir/Enes)
+       → haftalik planlanir (isoWeek)
+       → tamamlanir; geri bildirim / "hatali donus" izlenir
+```
+
+Ozet: **Factory = musteri/kaynak, Person = biz (ekip), WorkItem = Borcelik'ten gelen is.**
+
 ## 1. Teknoloji
 
 | Katman | Secim | Neden |

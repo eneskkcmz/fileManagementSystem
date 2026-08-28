@@ -9,17 +9,30 @@ export function ActivityPage() {
 
   return (
     <>
-      <div className="page-head"><h1>Aktiviteler</h1></div>
+      <div className="page-head">
+        <div>
+          <h1 className="page-title">Aktiviteler</h1>
+          <div className="page-sub">Sistemdeki önemli işlemlerin kaydı</div>
+        </div>
+      </div>
       <div className="card">
         {items.length === 0 ? (
           <div className="empty">Aktivite yok.</div>
         ) : (
-          items.map((a) => (
-            <div key={a.id} className="activity-item">
-              <div><span className="badge gray" style={{ marginRight: 8 }}>{a.action}</span>{a.description}</div>
-              <div className="time">{formatDateTime(a.createdAt)}</div>
-            </div>
-          ))
+          <div className="feed">
+            {items.map((a) => (
+              <div key={a.id} className="feed-row">
+                <div className="feed-dot">{a.action.includes('deleted') ? '−' : a.action.includes('created') ? '+' : '•'}</div>
+                <div className="feed-body">
+                  <div className="feed-text">
+                    <span className="badge gray plain" style={{ marginRight: 8, fontSize: 11 }}>{a.action}</span>
+                    {a.description}
+                  </div>
+                  <div className="feed-time">{formatDateTime(a.createdAt)}</div>
+                </div>
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </>

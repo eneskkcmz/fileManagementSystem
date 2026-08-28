@@ -31,7 +31,7 @@ export function ProjectDetail() {
   return (
     <>
       <div className="crumb">
-        <Link to="/factories">Fabrikalar</Link> /{' '}
+        <Link to="/fabrikalar">Yönetim</Link> /{' '}
         <Link to={`/factories/${p.factoryId}`}>{p.factoryName}</Link> / {p.name}
       </div>
       <div className="page-head">
