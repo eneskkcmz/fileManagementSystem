@@ -10,14 +10,14 @@ import type { Database } from 'better-sqlite3';
  */
 export function runMigrations(db: Database): void {
   db.exec(`
-    CREATE TABLE IF NOT EXISTS factories (
-      id          TEXT PRIMARY KEY,
+    CREATE TABLE IF NOT EXISTS
       name        TEXT NOT NULL,
       code        TEXT NOT NULL,
       description TEXT,
       createdAt   TEXT NOT NULL,
       updatedAt   TEXT NOT NULL,
-      deletedAt   TEXT
+      deletedAt   TEXT factories (
+      id          TEXT PRIMARY KEY,
     );
 
     CREATE TABLE IF NOT EXISTS projects (
@@ -60,9 +60,21 @@ export function runMigrations(db: Database): void {
       createdAt   TEXT NOT NULL
     );
 
+    CREATE TABLE IF NOT EXISTS persons(
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      email TEXT NOT NULL,
+      phone TEXT NOT NULL,
+      createdAt   TEXT NOT NULL,
+      updatedAt   TEXT NOT NULL,
+      deletedAt   TEXT  ,
+    );
+                
     CREATE INDEX IF NOT EXISTS idx_projects_factoryId ON projects(factoryId);
     CREATE INDEX IF NOT EXISTS idx_work_items_projectId ON work_items(projectId);
     CREATE INDEX IF NOT EXISTS idx_activities_projectId ON activities(projectId);
     CREATE INDEX IF NOT EXISTS idx_activities_createdAt ON activities(createdAt);
+    CREATE INDEX IF NOT EXISTS idx_persons_deleteAt ON persons(deletedAt);
+
   `);
 }
