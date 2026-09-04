@@ -10,19 +10,19 @@ import type { Database } from 'better-sqlite3';
  */
 export function runMigrations(db: Database): void {
   db.exec(`
-    CREATE TABLE IF NOT EXISTS
-      name        TEXT NOT NULL,
-      code        TEXT NOT NULL,
-      description TEXT,
-      createdAt   TEXT NOT NULL,
-      updatedAt   TEXT NOT NULL,
-      deletedAt   TEXT factories (
-      id          TEXT PRIMARY KEY,
+    CREATE TABLE IF NOT EXISTS factories (
+                                           id          TEXT PRIMARY KEY,
+                                           name        TEXT NOT NULL,
+                                           code        TEXT NOT NULL,
+                                           description TEXT,
+                                           createdAt   TEXT NOT NULL,
+                                           updatedAt   TEXT NOT NULL,
+                                           deletedAt   TEXT
     );
 
     CREATE TABLE IF NOT EXISTS projects (
-      id            TEXT PRIMARY KEY,
-      factoryId     TEXT NOT NULL REFERENCES factories(id),
+                                          id            TEXT PRIMARY KEY,
+                                          factoryId     TEXT NOT NULL REFERENCES factories(id),
       name          TEXT NOT NULL,
       description   TEXT,
       status        TEXT NOT NULL DEFAULT 'planning',
@@ -31,11 +31,11 @@ export function runMigrations(db: Database): void {
       createdAt     TEXT NOT NULL,
       updatedAt     TEXT NOT NULL,
       deletedAt     TEXT
-    );
+      );
 
     CREATE TABLE IF NOT EXISTS work_items (
-      id          TEXT PRIMARY KEY,
-      projectId   TEXT NOT NULL REFERENCES projects(id),
+                                            id          TEXT PRIMARY KEY,
+                                            projectId   TEXT NOT NULL REFERENCES projects(id),
       title       TEXT NOT NULL,
       description TEXT,
       type        TEXT NOT NULL DEFAULT 'task',
@@ -47,34 +47,33 @@ export function runMigrations(db: Database): void {
       createdAt   TEXT NOT NULL,
       updatedAt   TEXT NOT NULL,
       deletedAt   TEXT
-    );
+      );
 
     CREATE TABLE IF NOT EXISTS activities (
-      id          TEXT PRIMARY KEY,
-      factoryId   TEXT,
-      projectId   TEXT,
-      entityType  TEXT NOT NULL,
-      entityId    TEXT NOT NULL,
-      action      TEXT NOT NULL,
-      description TEXT NOT NULL,
-      createdAt   TEXT NOT NULL
+                                            id          TEXT PRIMARY KEY,
+                                            factoryId   TEXT,
+                                            projectId   TEXT,
+                                            entityType  TEXT NOT NULL,
+                                            entityId    TEXT NOT NULL,
+                                            action      TEXT NOT NULL,
+                                            description TEXT NOT NULL,
+                                            createdAt   TEXT NOT NULL
     );
 
-    CREATE TABLE IF NOT EXISTS persons(
-      id TEXT PRIMARY KEY,
-      name TEXT NOT NULL,
-      email TEXT NOT NULL,
-      phone TEXT NOT NULL,
-      createdAt   TEXT NOT NULL,
-      updatedAt   TEXT NOT NULL,
-      deletedAt   TEXT  ,
+    CREATE TABLE IF NOT EXISTS persons (
+                                         id          TEXT PRIMARY KEY,
+                                         name        TEXT NOT NULL,
+                                         email       TEXT NOT NULL,
+                                         phone       TEXT NOT NULL,
+                                         createdAt   TEXT NOT NULL,
+                                         updatedAt   TEXT NOT NULL,
+                                         deletedAt   TEXT
     );
-                
+
     CREATE INDEX IF NOT EXISTS idx_projects_factoryId ON projects(factoryId);
     CREATE INDEX IF NOT EXISTS idx_work_items_projectId ON work_items(projectId);
     CREATE INDEX IF NOT EXISTS idx_activities_projectId ON activities(projectId);
     CREATE INDEX IF NOT EXISTS idx_activities_createdAt ON activities(createdAt);
-    CREATE INDEX IF NOT EXISTS idx_persons_deleteAt ON persons(deletedAt);
-
+    CREATE INDEX IF NOT EXISTS idx_persons_deletedAt ON persons(deletedAt);
   `);
 }
